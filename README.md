@@ -27,7 +27,7 @@ It runs as a small menu bar app. It sits at desktop level, so your desktop icons
 ## Install
 
 ```bash
-git clone <this repository> thoc-wall
+git clone https://github.com/CoachSteff/thoc-wall.git
 ```
 
 ```bash

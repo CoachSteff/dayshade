@@ -206,6 +206,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             Copyleft: free software under the GNU General Public License, version 3 or later. You may use, study, share and change it, as long as what you share stays under the same licence.
 
             The House of Coaching name and logo are not covered by this licence.
+
+            Source code: github.com/CoachSteff/thoc-wall
             """, attributes: [.font: body, .foregroundColor: NSColor.secondaryLabelColor, .paragraphStyle: para])
         NSApp.activate()
         NSApp.orderFrontStandardAboutPanel(options: [.credits: credits, .applicationName: "THOC Wall"])
