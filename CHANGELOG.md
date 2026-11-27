@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.2.0 · 27 November 2026
+
+- Renamed from THOC Wall to Dayshade. Settings, colour schemes and added logos carry over automatically on first launch.
+- New bundle identifier `io.github.coachsteff.dayshade`. Turn on Open at login and allow location again once, because macOS treats it as a new app.
+
 ## 1.1.0 · 27 November 2026
 
 - Settings window with Colours, Logos, Bars and General panes, and a live preview of your main screen.

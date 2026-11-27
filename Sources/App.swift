@@ -116,7 +116,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
     private func buildMenu() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        statusItem.button?.image = Logo.menuIcon ?? NSImage(systemSymbolName: "sparkles", accessibilityDescription: "THOC Wall")
+        statusItem.button?.image = Logo.menuIcon ?? NSImage(systemSymbolName: "sparkles", accessibilityDescription: "Dayshade")
         statusItem.menu = NSMenu()
         statusItem.menu?.delegate = self
     }
@@ -128,7 +128,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             let host = NSHostingController(rootView: SettingsView(state: state, preview: previewWindow, location: location,
                                                                   exportFrame: { [weak self] in self?.exportFrame() }))
             let win = NSWindow(contentViewController: host)
-            win.title = "THOC Wall"
+            win.title = "Dayshade"
             win.styleMask = [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView]
             win.setContentSize(NSSize(width: 860, height: 760))
             win.minSize = NSSize(width: 720, height: 520)
@@ -164,7 +164,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     private func exportFrame() {
         let panel = NSSavePanel()
         panel.allowedContentTypes = [.png]
-        panel.nameFieldStringValue = "THOC Wall \(Date().formatted(.dateTime.year().month().day().hour().minute())).png"
+        panel.nameFieldStringValue = "Dayshade \(Date().formatted(.dateTime.year().month().day().hour().minute())).png"
             .replacingOccurrences(of: ":", with: ".").replacingOccurrences(of: "/", with: "-")
         NSApp.activate()
         guard panel.runModal() == .OK, let url = panel.url,
@@ -175,7 +175,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     /// Saves a still per display and sets it as the macOS wallpaper, so the lock screen and Mission Control match.
     private func syncSystemWallpaper() {
         let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("THOC Wall/Stills", isDirectory: true)
+            .appendingPathComponent("Dayshade/Stills", isDirectory: true)
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         let stamp = Int(Date().timeIntervalSince1970)
         for (win, ws) in windows {
@@ -210,7 +210,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             Source code: github.com/CoachSteff/thoc-wall
             """, attributes: [.font: body, .foregroundColor: NSColor.secondaryLabelColor, .paragraphStyle: para])
         NSApp.activate()
-        NSApp.orderFrontStandardAboutPanel(options: [.credits: credits, .applicationName: "THOC Wall"])
+        NSApp.orderFrontStandardAboutPanel(options: [.credits: credits, .applicationName: "Dayshade"])
     }
 
     @objc private func togglePause() { state.userPaused.toggle() }
@@ -229,7 +229,7 @@ extension AppDelegate: NSMenuDelegate {
             (target ?? menu).addItem(i)
             return i
         }
-        _ = item("About THOC Wall", #selector(showAbout))
+        _ = item("About Dayshade", #selector(showAbout))
         menu.addItem(.separator())
         let sun = state.sun(at: Date())
         let times = sunTimes(on: Date(), latitude: state.settings.latitude, longitude: state.settings.longitude)
@@ -252,6 +252,6 @@ extension AppDelegate: NSMenuDelegate {
         _ = item("Preview a Whole Day (1 min)", #selector(previewDay))
         menu.addItem(.separator())
         _ = item("Settings…", #selector(openSettings), key: ",")
-        menu.addItem(NSMenuItem(title: "Quit THOC Wall", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
+        menu.addItem(NSMenuItem(title: "Quit Dayshade", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
     }
 }

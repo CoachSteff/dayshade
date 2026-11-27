@@ -36,7 +36,7 @@ final class LocationService: NSObject, CLLocationManagerDelegate {
             manager.requestLocation()
         } else {
             busy = false
-            message = "Location access is off for THOC Wall. Turn it on in System Settings › Privacy & Security › Location Services, or search for a place instead."
+            message = "Location access is off for Dayshade. Turn it on in System Settings › Privacy & Security › Location Services, or search for a place instead."
         }
     }
 

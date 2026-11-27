@@ -238,7 +238,7 @@ struct SchemesCard: View {
             }
             HStack {
                 Button("Import…", systemImage: "square.and.arrow.down", action: importSchemes)
-                Button("Export All…", systemImage: "square.and.arrow.up") { export(state.settings.schemes, name: "THOC Wall schemes") }
+                Button("Export All…", systemImage: "square.and.arrow.up") { export(state.settings.schemes, name: "Dayshade schemes") }
             }
             .controlSize(.small)
 
@@ -717,7 +717,7 @@ struct GeneralPane: View {
             if let loginError { Text(loginError).font(.callout).foregroundStyle(.red) }
             Toggle("Show icon in the menu bar", isOn: $state.settings.showMenuIcon)
             if !state.settings.showMenuIcon {
-                Text("To get back here, open THOC Wall again from your Applications folder.")
+                Text("To get back here, open Dayshade again from your Applications folder.")
                     .font(.callout).foregroundStyle(.secondary)
             }
         }
@@ -742,7 +742,7 @@ struct GeneralPane: View {
 
         Card {
             HStack {
-                Text("THOC Wall \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")")
+                Text("Dayshade \(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")")
                     .foregroundStyle(.secondary)
                 Spacer()
                 Button("Reset All Settings…", role: .destructive) { confirmReset = true }
@@ -760,7 +760,7 @@ struct GeneralPane: View {
             if on { try SMAppService.mainApp.register() } else { try SMAppService.mainApp.unregister() }
             loginError = nil
         } catch {
-            loginError = "\(error.localizedDescription) Move THOC Wall to your Applications folder and try again."
+            loginError = "\(error.localizedDescription) Move Dayshade to your Applications folder and try again."
         }
         loginEnabled = SMAppService.mainApp.status == .enabled
     }

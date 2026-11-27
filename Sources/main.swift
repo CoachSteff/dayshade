@@ -1,7 +1,7 @@
 import AppKit
 import SwiftUI
 
-// `THOC Wall --render out.png [--hour 7.5] [--dark] [--size 2560x1600]` writes a single frame and exits.
+// `Dayshade --render out.png [--hour 7.5] [--dark] [--size 2560x1600]` writes a single frame and exits.
 // Handy for previews, and for setting a matching still as the lock-screen wallpaper.
 let args = CommandLine.arguments
 if let i = args.firstIndex(of: "--render"), i + 1 < args.count {

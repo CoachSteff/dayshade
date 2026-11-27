@@ -113,6 +113,7 @@ struct WallSettings: Codable, Equatable {
 
     /// Stored values are laid over the defaults, so settings saved by an older version still load.
     static func load() -> WallSettings {
+        migrateFromThocWall()
         let fallback = WallSettings()
         guard let data = UserDefaults.standard.data(forKey: key),
               let stored = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
@@ -130,6 +131,26 @@ struct WallSettings: Codable, Equatable {
               let settings = try? JSONDecoder().decode(WallSettings.self, from: mergedData)
         else { return fallback }
         return settings
+    }
+
+    /// Dayshade was called THOC Wall, with its own settings and logo folder. Bring both across once.
+    private static func migrateFromThocWall() {
+        let d = UserDefaults.standard
+        guard d.data(forKey: key) == nil,
+              var data = UserDefaults(suiteName: "be.thehouseofcoaching.wall")?.data(forKey: key) else { return }
+        let fm = FileManager.default
+        let support = fm.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
+        let old = support.appendingPathComponent("THOC Wall"), new = support.appendingPathComponent("Dayshade")
+        if fm.fileExists(atPath: old.path) && !fm.fileExists(atPath: new.path) {
+            try? fm.moveItem(at: old, to: new)
+        }
+        // Logo paths are stored in full, so point them at the moved folder. JSON escapes slashes.
+        if var text = String(data: data, encoding: .utf8) {
+            text = text.replacingOccurrences(of: "\\/THOC Wall\\/", with: "\\/Dayshade\\/")
+                .replacingOccurrences(of: "/THOC Wall/", with: "/Dayshade/")
+            data = Data(text.utf8)
+        }
+        d.set(data, forKey: key)
     }
 
     func save() {

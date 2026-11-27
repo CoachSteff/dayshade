@@ -1,6 +1,6 @@
-# THOC Wall
+# Dayshade
 
-A living desktop wallpaper for macOS, made for The House of Coaching. Soft mesh gradients drift slowly behind your desktop icons, their colours follow the sun where you are, and they deepen when your Mac switches to dark mode.
+Dayshade (formerly THOC Wall) is a living desktop wallpaper for macOS, made for The House of Coaching. Soft mesh gradients drift slowly behind your desktop icons, their colours follow the sun where you are, and they deepen when your Mac switches to dark mode.
 
 | Dawn, light mode | Midday, light mode |
 |---|---|
@@ -34,7 +34,7 @@ git clone https://github.com/CoachSteff/thoc-wall.git
 cd thoc-wall && ./build.sh install
 ```
 
-`build.sh` compiles the app into `build/THOC Wall.app`. With `install` it also copies it to `~/Applications` and starts it. There are no dependencies to download.
+`build.sh` compiles the app into `build/Dayshade.app`. With `install` it also copies it to `~/Applications` and starts it. There are no dependencies to download.
 
 To start it with your Mac, open Settings › General and turn on **Open at login**. macOS may ask you to confirm in System Settings › General › Login Items.
 
@@ -42,14 +42,14 @@ To start it with your Mac, open Settings › General and turn on **Open at login
 
 Click the figure in the menu bar for:
 
-- **About THOC Wall**: version, author and licence
+- **About Dayshade**: version, author and licence
 - today's sunrise and sunset, and where the sun is now
 - **Colour Scheme**: switch schemes without opening Settings
 - **Pause Animation**, **Show Logos and Bars**
 - **Preview a Whole Day**: 24 hours of colour in one minute
 - **Settings…** (⌘,)
 
-If you hide the menu bar icon, open THOC Wall again from Applications to get back to Settings.
+If you hide the menu bar icon, open Dayshade again from Applications to get back to Settings.
 
 ### Settings
 
@@ -94,7 +94,7 @@ or a list of them, as written by *Export All*. The nine colours are a 3 × 3 gri
 The app binary doubles as a renderer, handy for previews or a matching lock-screen picture:
 
 ```bash
-"build/THOC Wall.app/Contents/MacOS/THOC Wall" --render out.png --hour 7.5 --size 3024x1964
+"build/Dayshade.app/Contents/MacOS/Dayshade" --render out.png --hour 7.5 --size 3024x1964
 ```
 
 Add `--dark` for dark mode. It uses your saved settings. Two more options help when testing:
@@ -109,11 +109,11 @@ Add `--dark` for dark mode. It uses your saved settings. Two more options help w
 
 The code is plain Swift and SwiftUI with no packages, built by `swiftc` from `build.sh`. The version number lives in `build.sh`. See [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) for how the pieces fit together, and [CHANGELOG.md](CHANGELOG.md) for what changed.
 
-Settings are stored in the user defaults domain `be.thehouseofcoaching.wall`. Logos you add are copied to `~/Library/Application Support/THOC Wall/Logos`.
+Settings are stored in the user defaults domain `io.github.coachsteff.dayshade`. Logos you add are copied to `~/Library/Application Support/Dayshade/Logos`.
 
 ## Licence
 
-THOC Wall is copyleft free software, released under the **GNU General Public License, version 3 or later**. You may use, study, share and change it, as long as anything you distribute stays under the same licence and keeps its source open. See [LICENSE](LICENSE).
+Dayshade is copyleft free software, released under the **GNU General Public License, version 3 or later**. You may use, study, share and change it, as long as anything you distribute stays under the same licence and keeps its source open. See [LICENSE](LICENSE).
 
 **Brand assets are not covered by the GPL.** The House of Coaching name, the logo in `Resources/logo.svg` and the app icon in `Resources/icon-1024.png` belong to The House of Coaching. If you build your own version for another organisation, replace them with your own.
 

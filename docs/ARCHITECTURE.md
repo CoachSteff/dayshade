@@ -1,4 +1,4 @@
-# How THOC Wall works
+# How Dayshade works
 
 A short map of the code for anyone changing it. Everything lives in `Sources/`; `build.sh` compiles it with `swiftc` into an app bundle, with no Xcode project and no packages.
 

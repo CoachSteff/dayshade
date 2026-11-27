@@ -13,7 +13,7 @@ enum Logo {
 
     static var logoFolder: URL {
         let dir = FileManager.default.urls(for: .applicationSupportDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent("THOC Wall/Logos", isDirectory: true)
+            .appendingPathComponent("Dayshade/Logos", isDirectory: true)
         try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
         return dir
     }
