@@ -207,7 +207,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
             The House of Coaching name and logo are not covered by this licence.
 
-            Source code: github.com/CoachSteff/thoc-wall
+            Source code: github.com/CoachSteff/dayshade
             """, attributes: [.font: body, .foregroundColor: NSColor.secondaryLabelColor, .paragraphStyle: para])
         NSApp.activate()
         NSApp.orderFrontStandardAboutPanel(options: [.credits: credits, .applicationName: "Dayshade"])

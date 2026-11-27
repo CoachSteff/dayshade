@@ -27,11 +27,11 @@ It runs as a small menu bar app. It sits at desktop level, so your desktop icons
 ## Install
 
 ```bash
-git clone https://github.com/CoachSteff/thoc-wall.git
+git clone https://github.com/CoachSteff/dayshade.git
 ```
 
 ```bash
-cd thoc-wall && ./build.sh install
+cd dayshade && ./build.sh install
 ```
 
 `build.sh` compiles the app into `build/Dayshade.app`. With `install` it also copies it to `~/Applications` and starts it. There are no dependencies to download.
