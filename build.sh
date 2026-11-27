@@ -3,6 +3,8 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
+VERSION="1.1.0"
+BUILD="$(git rev-list --count HEAD 2>/dev/null || echo 1)"
 APP="build/THOC Wall.app"
 rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
@@ -21,7 +23,7 @@ done
 iconutil -c icns "$ICONSET" -o "$APP/Contents/Resources/AppIcon.icns"
 rm -rf "$ICONSET"
 
-cat > "$APP/Contents/Info.plist" <<'PLIST'
+cat > "$APP/Contents/Info.plist" <<PLIST
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -32,11 +34,14 @@ cat > "$APP/Contents/Info.plist" <<'PLIST'
   <key>CFBundleExecutable</key><string>THOC Wall</string>
   <key>CFBundleIconFile</key><string>AppIcon</string>
   <key>CFBundlePackageType</key><string>APPL</string>
-  <key>CFBundleShortVersionString</key><string>1.0</string>
-  <key>CFBundleVersion</key><string>1</string>
+  <key>CFBundleShortVersionString</key><string>$VERSION</string>
+  <key>CFBundleVersion</key><string>$BUILD</string>
+  <key>NSHumanReadableCopyright</key><string>© 2026 Steff Vanhaverbeke. Free software under the GNU GPL v3 or later.</string>
   <key>LSMinimumSystemVersion</key><string>15.0</string>
   <key>LSUIElement</key><true/>
   <key>NSHighResolutionCapable</key><true/>
+  <key>NSLocationUsageDescription</key><string>THOC Wall uses your approximate location to match the colours to sunrise and sunset where you are.</string>
+  <key>NSLocationWhenInUseUsageDescription</key><string>THOC Wall uses your approximate location to match the colours to sunrise and sunset where you are.</string>
 </dict>
 </plist>
 PLIST

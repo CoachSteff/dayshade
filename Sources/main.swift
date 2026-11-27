@@ -9,12 +9,14 @@ if let i = args.firstIndex(of: "--render"), i + 1 < args.count {
         func value(_ flag: String) -> String? { args.firstIndex(of: flag).flatMap { $0 + 1 < args.count ? args[$0 + 1] : nil } }
         let size = (value("--size") ?? "2560x1600").split(separator: "x").compactMap { Double($0) }
         let state = WallState()
-        state.setDark(args.contains("--dark"), animated: false)
+        state.persist = false
+        state.settings.appearance = args.contains("--dark") ? .dark : .light
+        state.setSystemDark(false, animated: false)
         var date = Date()
         if let h = value("--hour").flatMap(Double.init) {
             date = Calendar.current.startOfDay(for: date).addingTimeInterval(h * 3600)
         }
-        let view = WallpaperView(state: state, window: WindowState(), fixedDate: date)
+        let view = WallpaperView(state: state, window: WindowState(screen: NSScreen.screens.first), fixedDate: date)
             .frame(width: size[0], height: size[1])
         let renderer = ImageRenderer(content: view)
         renderer.scale = 1

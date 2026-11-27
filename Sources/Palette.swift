@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import AppKit
 
 struct RGB {
     var r, g, b: Double
@@ -110,22 +111,63 @@ private func smooth(_ x: Double) -> Double {
 }
 
 /// Picks the palette for the sun's current position. Returns the palette and how "night" it is (0...1).
-func paletteForSun(_ sun: SunPosition) -> (Palette, Double) {
+func paletteForSun(_ sun: SunPosition, _ p: (String) -> Palette) -> (Palette, Double) {
     let e = sun.elevation
-    if e <= -12 { return (.night, 1) }
+    if e <= -12 { return (p("night"), 1) }
     let nightness = smooth((-e - 2) / 10)
 
     if sun.rising {
-        if e < -4 { return (.mix(.night, .dawn, smooth((e + 12) / 8)), nightness) }
-        if e < 6 { return (.mix(.dawn, .morning, smooth((e + 4) / 10)), nightness) }
+        if e < -4 { return (.mix(p("night"), p("dawn"), smooth((e + 12) / 8)), nightness) }
+        if e < 6 { return (.mix(p("dawn"), p("morning"), smooth((e + 4) / 10)), nightness) }
         let top = max(sun.maxElevation * 0.85, 7)
-        return (.mix(.morning, .midday, smooth((e - 6) / (top - 6))), 0)
+        return (.mix(p("morning"), p("midday"), smooth((e - 6) / (top - 6))), 0)
     } else {
-        if e < -2 { return (.mix(.night, .dusk, smooth((e + 12) / 10)), nightness) }
-        if e < 8 { return (.mix(.dusk, .golden, smooth((e + 2) / 10)), nightness) }
+        if e < -2 { return (.mix(p("night"), p("dusk"), smooth((e + 12) / 10)), nightness) }
+        if e < 8 { return (.mix(p("dusk"), p("golden"), smooth((e + 2) / 10)), nightness) }
         let top = max(sun.maxElevation * 0.85, 9)
         let f = max(0, min(1, (e - 8) / (top - 8)))
-        if f < 0.5 { return (.mix(.golden, .afternoon, smooth(f * 2)), 0) }
-        return (.mix(.afternoon, .midday, smooth((f - 0.5) * 2)), 0)
+        if f < 0.5 { return (.mix(p("golden"), p("afternoon"), smooth(f * 2)), 0) }
+        return (.mix(p("afternoon"), p("midday"), smooth((f - 0.5) * 2)), 0)
     }
+}
+
+struct SchemePreset: Identifiable {
+    let id: String
+    let name: String
+    let palette: Palette
+}
+
+extension Palette {
+    static let presets = [
+        SchemePreset(id: "dawn", name: "Dawn", palette: .dawn),
+        SchemePreset(id: "morning", name: "Morning", palette: .morning),
+        SchemePreset(id: "midday", name: "Midday", palette: .midday),
+        SchemePreset(id: "afternoon", name: "Afternoon", palette: .afternoon),
+        SchemePreset(id: "golden", name: "Golden hour", palette: .golden),
+        SchemePreset(id: "dusk", name: "Dusk", palette: .dusk),
+        SchemePreset(id: "night", name: "Night", palette: .night),
+    ]
+
+    init(hexStrings: [String]) {
+        let padded = (hexStrings + Array(repeating: "808080", count: 9)).prefix(9)
+        colors = padded.map { RGB(hex: UInt32($0.trimmingCharacters(in: CharacterSet(charactersIn: "# ")), radix: 16) ?? 0x808080).lab }
+    }
+
+    var hexStrings: [String] { colors.map { $0.rgb.hex } }
+}
+
+extension RGB {
+    var hex: String {
+        String(format: "%02X%02X%02X", Int((r * 255).rounded()), Int((g * 255).rounded()), Int((b * 255).rounded()))
+    }
+
+    init(color: Color) {
+        let ns = NSColor(color).usingColorSpace(.sRGB) ?? .gray
+        self.init(Double(ns.redComponent), Double(ns.greenComponent), Double(ns.blueComponent))
+    }
+}
+
+extension Color {
+    init(hex: String) { self = RGB(hex: UInt32(hex, radix: 16) ?? 0xFFFFFF).color }
+    var hex: String { RGB(color: self).hex }
 }

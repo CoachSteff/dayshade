@@ -32,3 +32,18 @@ func sunPosition(at date: Date, latitude: Double, longitude: Double) -> SunPosit
 
     return SunPosition(elevation: elevation, rising: hourAngle < 0, maxElevation: maxElevation)
 }
+
+/// Today's sunrise and sunset, found by stepping through the day. Nil during polar day or night.
+func sunTimes(on date: Date, latitude: Double, longitude: Double) -> (rise: Date?, set: Date?) {
+    let midnight = Calendar.current.startOfDay(for: date)
+    var rise: Date?, set: Date?
+    var prev = sunPosition(at: midnight, latitude: latitude, longitude: longitude).elevation
+    for minute in stride(from: 2, through: 1440, by: 2) {
+        let t = midnight.addingTimeInterval(Double(minute) * 60)
+        let e = sunPosition(at: t, latitude: latitude, longitude: longitude).elevation
+        if prev < -0.833 && e >= -0.833 { rise = t }
+        if prev >= -0.833 && e < -0.833 { set = t }
+        prev = e
+    }
+    return (rise, set)
+}
