@@ -32,7 +32,7 @@ enum LogoTint: String, Codable, CaseIterable, Identifiable {
 struct LogoItem: Codable, Identifiable, Equatable {
     var id = UUID()
     var name: String
-    var path: String                 // "builtin:thoc" or a file in Application Support
+    var path: String                 // "builtin:coachsteff", "builtin:thoc" or a file in Application Support
     var rect: GridRect
     var opacity = 0.92
     var tint = LogoTint.original
@@ -41,6 +41,7 @@ struct LogoItem: Codable, Identifiable, Equatable {
     var scope = ScreenScope.all
     var enabled = true
 
+    static let coachsteff = LogoItem(name: "CoachSteff", path: "builtin:coachsteff", rect: .cells(9, 6, 6, 4))
     static let thoc = LogoItem(name: "The House of Coaching", path: "builtin:thoc", rect: .cells(9, 7, 6, 2))
 }
 
@@ -103,11 +104,13 @@ struct WallSettings: Codable, Equatable {
     var place = "Brussels, Belgium"
     var latitude = 50.85
     var longitude = 4.35
-    var logos = [LogoItem.thoc]
+    var logos = [LogoItem.coachsteff]
     var bars: [BarItem] = []
     var overlaysHidden = false
     var showMenuIcon = true
     var syncSystemWallpaper = false
+    var loginScreenLogos = false     // only used by the system wallpaper sync
+    var loginScreenBars = false
 
     private static let key = "settings.v1"
 

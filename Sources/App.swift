@@ -21,7 +21,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
             DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) { [weak self] in
                 func scrollers(_ v: NSView) -> [NSScrollView] { ((v as? NSScrollView).map { [$0] } ?? []) + v.subviews.flatMap(scrollers) }
                 let content = self?.settingsWindow?.contentView
-                let page = content.flatMap { scrollers($0).compactMap(\.documentView).max { $0.bounds.height < $1.bounds.height } }
+                let page = content.flatMap { scrollers($0).compactMap(\.documentView).max { $0.bounds.width * $0.bounds.height < $1.bounds.width * $1.bounds.height } }
                 if let view = page ?? content,
                    let rep = view.bitmapImageRepForCachingDisplay(in: view.bounds) {
                     view.cacheDisplay(in: view.bounds, to: rep)
@@ -74,15 +74,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         state.setSystemDark(dark, animated: animated)
     }
 
+    private var lastLoginOverlays: [Bool] = []
+
     private func applySettings() {
         statusItem?.isVisible = state.settings.showMenuIcon
+        let login = [state.settings.loginScreenLogos, state.settings.loginScreenBars]
         if state.settings.syncSystemWallpaper {
             if syncTimer == nil {
                 syncTimer = Timer.scheduledTimer(withTimeInterval: 600, repeats: true) { [weak self] _ in
                     Task { @MainActor in self?.syncSystemWallpaper() }
                 }
                 syncSystemWallpaper()
+            } else if lastLoginOverlays != login {
+                syncSystemWallpaper()
             }
+            lastLoginOverlays = login
         } else {
             syncTimer?.invalidate()
             syncTimer = nil
@@ -116,7 +122,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
     private func buildMenu() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
-        statusItem.button?.image = Logo.menuIcon ?? NSImage(systemSymbolName: "sparkles", accessibilityDescription: "Dayshade")
+        statusItem.button?.image = NSImage(systemSymbolName: "sun.horizon", accessibilityDescription: "Dayshade")
         statusItem.menu = NSMenu()
         statusItem.menu?.delegate = self
     }
@@ -152,8 +158,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
 
     // MARK: Stills
 
-    private func renderStill(for ws: WindowState, scale: CGFloat) -> Data? {
-        let view = WallpaperView(state: state, window: ws, fixedDate: Date())
+    private func renderStill(for ws: WindowState, scale: CGFloat, hideLogos: Bool = false, hideBars: Bool = false) -> Data? {
+        let view = WallpaperView(state: state, window: ws, fixedDate: Date(), hideLogos: hideLogos, hideBars: hideBars)
             .frame(width: ws.screenSize.width, height: ws.screenSize.height)
         let renderer = ImageRenderer(content: view)
         renderer.scale = scale
@@ -181,7 +187,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         for (win, ws) in windows {
             guard let screen = win.screen,
                   let id = screen.deviceDescription[NSDeviceDescriptionKey("NSScreenNumber")] as? NSNumber,
-                  let png = renderStill(for: ws, scale: screen.backingScaleFactor) else { continue }
+                  let png = renderStill(for: ws, scale: screen.backingScaleFactor,
+                                        hideLogos: !state.settings.loginScreenLogos,
+                                        hideBars: !state.settings.loginScreenBars) else { continue }
             // A new file name each time, because macOS caches wallpapers by path.
             let old = (try? FileManager.default.contentsOfDirectory(atPath: dir.path)) ?? []
             for f in old where f.hasPrefix("\(id)-") { try? FileManager.default.removeItem(at: dir.appendingPathComponent(f)) }
@@ -199,13 +207,13 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
         para.alignment = .center
         para.paragraphSpacing = 6
         let credits = NSAttributedString(string: """
-            A living wallpaper for The House of Coaching: soft gradients that follow the sun and your light or dark mode.
+            A living wallpaper: soft gradients that follow the sun and your light or dark mode.
 
             Made by Steff Vanhaverbeke.
 
             Copyleft: free software under the GNU General Public License, version 3 or later. You may use, study, share and change it, as long as what you share stays under the same licence.
 
-            The House of Coaching name and logo are not covered by this licence.
+            The CoachSteff and The House of Coaching logos are not covered by this licence.
 
             Source code: github.com/CoachSteff/dayshade
             """, attributes: [.font: body, .foregroundColor: NSColor.secondaryLabelColor, .paragraphStyle: para])

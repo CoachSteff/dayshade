@@ -5,6 +5,8 @@ struct WallpaperView: View {
     let window: WindowState
     var fixedDate: Date? = nil
     var maxFPS: Double = 60
+    var hideLogos = false
+    var hideBars = false
 
     var body: some View {
         let paused = state.userPaused || state.systemAsleep || !window.visible
@@ -39,14 +41,14 @@ struct WallpaperView: View {
                         .opacity(s.grain * 0.55)
                 }
                 if !s.overlaysHidden {
-                    ForEach(s.bars.filter { $0.enabled && shows($0.scope) }) { bar in
+                    ForEach(s.bars.filter { $0.enabled && !hideBars && shows($0.scope) }) { bar in
                         if let r = barFrame(bar, window: window, size: geo.size) {
                             BarShape(bar: bar, dark: dark, k: k)
                                 .frame(width: r.width, height: r.height)
                                 .position(x: r.midX, y: r.midY)
                         }
                     }
-                    ForEach(s.logos.filter { $0.enabled && shows($0.scope) }) { logo in
+                    ForEach(s.logos.filter { $0.enabled && !hideLogos && shows($0.scope) }) { logo in
                         if let img = Logo.image(for: logo.path) {
                             let r = logo.rect.cg(in: geo.size)
                             LogoImage(image: img, item: logo, dark: dark, k: k)

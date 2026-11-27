@@ -519,8 +519,10 @@ struct LogosPane: View {
             }
             HStack {
                 Button("Add Logo…", systemImage: "plus") { addFile() }
-                if !state.settings.logos.contains(where: { $0.path == "builtin:thoc" }) {
-                    Button("Add The House of Coaching") { add(.thoc) }
+                ForEach([LogoItem.coachsteff, .thoc], id: \.path) { item in
+                    if !state.settings.logos.contains(where: { $0.path == item.path }) {
+                        Button("Add \(item.name)") { add(item) }
+                    }
                 }
             }
         }
@@ -737,6 +739,11 @@ struct GeneralPane: View {
             Toggle("Keep the system wallpaper in step", isOn: $state.settings.syncSystemWallpaper)
             Text("Every ten minutes, saves a still of the current colours as your macOS wallpaper, so the lock screen and Mission Control match. Replaces the wallpaper you have set now.")
                 .font(.callout).foregroundStyle(.secondary)
+            Group {
+                Toggle("Show logos on the login screen", isOn: $state.settings.loginScreenLogos)
+                Toggle("Show bars on the login screen", isOn: $state.settings.loginScreenBars)
+            }
+            .disabled(!state.settings.syncSystemWallpaper)
             Button("Export Current Frame…", systemImage: "square.and.arrow.up", action: exportFrame)
         }
 
@@ -748,7 +755,7 @@ struct GeneralPane: View {
                 Button("Reset All Settings…", role: .destructive) { confirmReset = true }
             }
         }
-        .confirmationDialog("Reset every setting to the THOC defaults?", isPresented: $confirmReset) {
+        .confirmationDialog("Reset every setting to the defaults?", isPresented: $confirmReset) {
             Button("Reset", role: .destructive) { state.settings = WallSettings() }
         } message: {
             Text("Logos you added stay on disk but are removed from the wallpaper.")

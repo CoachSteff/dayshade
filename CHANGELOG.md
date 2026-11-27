@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- The menu bar icon is now a sun on the horizon instead of the figure from The House of Coaching logo.
+- New app icon: a sun on the horizon over a dusk gradient. Dayshade no longer presents itself as a House of Coaching app.
+- The CoachSteff logo is the default logo for new installs. The House of Coaching logo stays available under Logos › Add, and existing settings keep the logos they have.
+- With *Keep the system wallpaper in step* on, logos and bars are now left off the login and lock screen. Two new switches in Settings › General bring them back.
+
 ## 1.2.0 · 27 November 2026
 
 - Renamed from THOC Wall to Dayshade. Settings, colour schemes and added logos carry over automatically on first launch.

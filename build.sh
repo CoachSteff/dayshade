@@ -12,7 +12,7 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 swiftc -O -swift-version 5 -target arm64-apple-macos15 \
   -o "$APP/Contents/MacOS/Dayshade" Sources/*.swift
 
-cp Resources/logo.svg "$APP/Contents/Resources/"
+cp Resources/coachsteff.svg Resources/thoc.svg "$APP/Contents/Resources/"
 
 ICONSET=build/AppIcon.iconset
 rm -rf "$ICONSET" && mkdir -p "$ICONSET"
